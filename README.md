@@ -1,1 +1,0 @@
-# eclaro-academy-vms
