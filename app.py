@@ -117,5 +117,3 @@ def export_excel():
 def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
-
-# Pwede mo itanggal o hayaan ito, pero sa Vercel, ang Flask instance na 'app' ang direktang babasahin.
