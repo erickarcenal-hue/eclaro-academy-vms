@@ -1,16 +1,25 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 
-# Kunin ang mismong folder kung nasaan nakaposisyon ang app.py na ito
+# Kunin ang path ng kasalukuyang directory
 basedir = os.path.abspath(os.path.dirname(__file__))
+template_dir = os.path.join(basedir, 'templates')
 
-# I-set nang direkta ang templates folder gamit ang absolute path
-app = Flask(__name__, template_folder=os.path.join(basedir, 'templates'))
+app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'your_secret_key_here'
 
 @app.route('/')
 def welcome():
-    return render_template('welcome.html')
+    # Sinisigurong babasahin niya nang direkta ang file kung sakaling hindi mahanap ng Jinja loader
+    try:
+        return render_template('welcome.html')
+    except Exception as e:
+        # Fallback sakaling mag-error pa rin ang template loader sa Vercel
+        template_path = os.path.join(template_dir, 'welcome.html')
+        if os.path.exists(template_path):
+            with open(template_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        return f"Template error: {str(e)} (Path checked: {template_path})"
 
 @app.route('/index')
 def index():
