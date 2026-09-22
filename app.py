@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 
-# Kunin ang path ng kasalukuyang directory
+# Kunin ang absolute path ng templates folder para sa Vercel serverless environment
 basedir = os.path.abspath(os.path.dirname(__file__))
 template_dir = os.path.join(basedir, 'templates')
 
@@ -10,16 +10,14 @@ app.secret_key = 'your_secret_key_here'
 
 @app.route('/')
 def welcome():
-    # Sinisigurong babasahin niya nang direkta ang file kung sakaling hindi mahanap ng Jinja loader
     try:
         return render_template('welcome.html')
     except Exception as e:
-        # Fallback sakaling mag-error pa rin ang template loader sa Vercel
         template_path = os.path.join(template_dir, 'welcome.html')
         if os.path.exists(template_path):
             with open(template_path, 'r', encoding='utf-8') as f:
                 return f.read()
-        return f"Template error: {str(e)} (Path checked: {template_path})"
+        return f"Template error: {str(e)}"
 
 @app.route('/index')
 def index():
@@ -28,8 +26,16 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        # Ilagay dito ang login verification logic mo
         return redirect(url_for('dashboard'))
     return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # Ilagay dito ang registration logic mo
+        return redirect(url_for('login'))
+    return render_template('register.html')
 
 @app.route('/dashboard')
 def dashboard():
