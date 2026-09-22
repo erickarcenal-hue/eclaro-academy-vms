@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 
-# Kunin ang absolute path ng templates folder para sa Vercel serverless environment
+# Kunin ang absolute path para sa Vercel serverless environment
 basedir = os.path.abspath(os.path.dirname(__file__))
 template_dir = os.path.join(basedir, 'templates')
 
@@ -26,16 +26,8 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Ilagay dito ang login verification logic mo
         return redirect(url_for('dashboard'))
     return render_template('login.html')
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        # Ilagay dito ang registration logic mo
-        return redirect(url_for('login'))
-    return render_template('register.html')
 
 @app.route('/dashboard')
 def dashboard():
